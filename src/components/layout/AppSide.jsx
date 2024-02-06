@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Card, Layout, List, Spin, Statistic, Tag, Typography} from "antd";
 import {ArrowDownOutlined, ArrowUpOutlined} from '@ant-design/icons';
 import {fakeAssets, fakeFetchCrypto} from "../../api.js";
 import {percentDifference} from "../../utils.js";
+import CryptoContext from "../../context/cripto-context.jsx";
 
 const sideStyle = {
     padding: '1rem'
@@ -10,39 +11,11 @@ const sideStyle = {
 
 
 const AppSide = () => {
-    const [loading, setLoading] = useState(false)
-    const [crypto, setCrypto] = useState([])
-    const [assets, setAssets] = useState([])
-
-    useEffect(() => {
-        async function preload() {
-            setLoading(true)
-            const {result} = await fakeFetchCrypto()
-            const assetsData = await fakeAssets()
-            setAssets(assetsData.map(asset => {
-                const coin = result.find(c => c.id === asset.id)
-                return {
-                    grow: asset.price < coin.price,
-                    growPercent: percentDifference(asset.price, coin.price),
-                    totalAmount: asset.amount * coin.price,
-                    totalProfit: (asset.amount * coin.price - asset.amount * asset.price).toFixed(2),
-                    ...asset
-                }
-            }))
-            setCrypto(result)
-            setLoading(false)
-        }
-
-        preload()
-
-    }, []);
+    const {loading, assets, crypto}  = useContext(CryptoContext)
 
     return (
         <>
-            {loading
-                ?
-                <Spin spinning={loading} fullscreen/>
-                :
+            <Spin spinning={loading} fullscreen/>
                 <Layout.Sider width="25%" style={sideStyle}>
                     {assets.map((asset) => (
                         <Card style={{marginBottom: '1rem'}} key={asset.id}>
@@ -73,9 +46,6 @@ const AppSide = () => {
                         </Card>
                     ))}
                 </Layout.Sider>
-            }
-
-
         </>
 
     );
