@@ -19,11 +19,20 @@ import CoinInfo from "./CoinInfo.jsx";
 
 const AddAssetForm = ({onClose}) => {
 
+<<<<<<< HEAD
     const {crypto, addAsset} = useCrypto()
+=======
+    const {crypto, addAssets} = useCrypto()
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
     const [coin, setCoin] = useState(null)
     const [form] = Form.useForm()
     const [result, setResult] = useState(false)
     const assetRef = useRef()
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
 
     if(!coin){
         return (
@@ -64,12 +73,20 @@ const AddAssetForm = ({onClose}) => {
 
     const onFinish = (values) => {
         const newAsset = {
+<<<<<<< HEAD
             id: coin.id,
+=======
+            id:coin.id,
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
             amount: values.amount,
             price: values.price,
             date: values.date?.$d ?? new Date(),
         }
         assetRef.current = newAsset
+<<<<<<< HEAD
+=======
+        addAssets(newAsset)
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
         setResult(true)
         addAsset(newAsset)
     }
@@ -100,6 +117,21 @@ const AddAssetForm = ({onClose}) => {
 
 
     return (
+<<<<<<< HEAD
+=======
+        <div>
+            {result
+                ?
+                <Result
+                    status="success"
+                    title="New Asset Added"
+                    subTitle={`Added ${assetRef.current?.amount} of ${coin.name} by price ${assetRef.current?.price}`}
+                    extra={[
+                        <Button key="buy" onClick={onClose}>Close</Button>,
+                    ]}
+                />
+                :
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
                 <Form
                     form={form}
                     name="basic"
@@ -119,6 +151,10 @@ const AddAssetForm = ({onClose}) => {
                     validateMessages={validateMessages}
                 >
                     <CoinInfo coin={coin}/>
+<<<<<<< HEAD
+=======
+                    <Divider></Divider>
+>>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
 
                     <Form.Item
                         label="Amount"
