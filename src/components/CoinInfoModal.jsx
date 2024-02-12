@@ -6,10 +6,6 @@ const CoinInfoModal = ({coin}) => {
     return (
         <>
             <CoinInfo coin={coin} withSymbol/>
-<<<<<<< HEAD
-=======
-            <Divider></Divider>
->>>>>>> 43574e761361790ee6bfc0b8045d5a542f950c56
 
             <Typography.Paragraph>
                 <Typography.Text strong>1 hour: </Typography.Text>
