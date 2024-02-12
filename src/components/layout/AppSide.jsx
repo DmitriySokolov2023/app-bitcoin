@@ -12,6 +12,7 @@ const sideStyle = {
 
 const AppSide = () => {
     const {loading, assets, crypto}  = useContext(CryptoContext)
+    console.log(assets)
 
     return (
         <>

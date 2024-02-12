@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
     Button,
     Checkbox,
@@ -14,14 +14,16 @@ import {
     Typography
 } from "antd";
 import {useCrypto} from "../context/cripto-context.jsx";
+import CoinInfo from "./CoinInfo.jsx";
 
 
 const AddAssetForm = ({onClose}) => {
 
-    const {crypto} = useCrypto()
+    const {crypto, addAsset} = useCrypto()
     const [coin, setCoin] = useState(null)
     const [form] = Form.useForm()
     const [result, setResult] = useState(false)
+    const assetRef = useRef()
 
     if(!coin){
         return (
@@ -47,8 +49,29 @@ const AddAssetForm = ({onClose}) => {
         )
     }
 
+    if(result){
+        return (
+            <Result
+                status="success"
+                title="New Asset Added"
+                subTitle={`Added ${assetRef.current.amount} of ${coin.name} by price ${assetRef.current.price}`}
+                extra={[
+                    <Button key="buy" onClick={onClose}>Close</Button>,
+                ]}
+            />
+        )
+    }
+
     const onFinish = (values) => {
+        const newAsset = {
+            id: coin.id,
+            amount: values.amount,
+            price: values.price,
+            date: values.date?.$d ?? new Date(),
+        }
+        assetRef.current = newAsset
         setResult(true)
+        addAsset(newAsset)
     }
 
     const handleAmountChange = (v) =>{
@@ -77,18 +100,6 @@ const AddAssetForm = ({onClose}) => {
 
 
     return (
-        <div>
-            {result
-                ?
-                <Result
-                    status="success"
-                    title="New Asset Added"
-                    subTitle={`Added ${42} of ${coin.name} by price ${24}`}
-                    extra={[
-                        <Button key="buy" onClick={onClose}>Close</Button>,
-                    ]}
-                />
-                :
                 <Form
                     form={form}
                     name="basic"
@@ -102,16 +113,12 @@ const AddAssetForm = ({onClose}) => {
                         maxWidth: 600,
                     }}
                     initialValues={{
-                        price: +coin.price.toFixed(2)
+                        price: +coin.price.toFixed(2),
                     }}
                     onFinish={onFinish}
                     validateMessages={validateMessages}
                 >
-                    <Flex align={"center"}>
-                        <img src={coin.icon} alt={coin.name} style={{width: '40px', marginRight: '10px'}}/>
-                        <Typography.Title level={2} style={{margin: '0'}}>{coin.name}</Typography.Title>
-                    </Flex>
-                    <Divider></Divider>
+                    <CoinInfo coin={coin}/>
 
                     <Form.Item
                         label="Amount"
@@ -129,7 +136,7 @@ const AddAssetForm = ({onClose}) => {
                     </Form.Item>
 
                     <Form.Item label="Price" name="price" >
-                        <InputNumber style={{width:'100%'}}  onChange={handlePriceChange}/>
+                        <InputNumber style={{width:'100%'}}  onChange={handlePriceChange} />
                     </Form.Item>
 
                     <Form.Item label="Date & Time" name="date" >
@@ -147,8 +154,6 @@ const AddAssetForm = ({onClose}) => {
                         </Button>
                     </Form.Item>
                 </Form>
-            }
-        </div>
     );
 };
 
